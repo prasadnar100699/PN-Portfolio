@@ -1,5 +1,4 @@
 'use client';
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Download, Cloud, Server, Zap } from 'lucide-react';
@@ -31,7 +30,6 @@ export function HeroSection() {
             >
               Prasad Narkhede
             </motion.h1>
-            
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -47,7 +45,6 @@ export function HeroSection() {
                 <span className="px-3 py-1 bg-gray-100 text-gray-800 text-sm rounded-full">CI/CD</span>
               </div>
             </motion.div>
-
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -55,11 +52,10 @@ export function HeroSection() {
               className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed"
             >
               I specialize in designing, automating, and scaling secure{' '}
-              <span className="text-blue-600 font-semibold">AWS cloud architectures</span>. 
+              <span className="text-blue-600 font-semibold">AWS cloud architectures</span>.
               From CI/CD pipelines to infrastructure cost optimization, I build solutions that are{' '}
               <span className="text-orange-600 font-semibold">reliable, efficient, and production-ready</span>.
             </motion.p>
-
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -84,7 +80,6 @@ export function HeroSection() {
                 Download Resume
               </Button>
             </motion.div>
-
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -92,12 +87,11 @@ export function HeroSection() {
               className="mt-12 text-sm text-gray-500 text-center lg:text-left"
             >
               <p>
-                <strong>Keywords:</strong> AWS Cloud Engineer • DevOps Engineer • Terraform • 
+                <strong>Keywords:</strong> AWS Cloud Engineer • DevOps Engineer • Terraform •
                 Docker • CI/CD pipelines • Kubernetes • Cloud Automation • Infrastructure as Code
               </p>
             </motion.div>
           </motion.div>
-
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
@@ -107,25 +101,24 @@ export function HeroSection() {
             <div className="relative w-full h-96 lg:h-[500px]">
               {/* Animated Background */}
               <motion.div
-                animate={{ 
+                animate={{
                   scale: [1, 1.05, 1],
                   rotate: [0, 1, 0]
                 }}
-                transition={{ 
+                transition={{
                   duration: 6,
                   repeat: Infinity,
                   repeatType: "reverse"
                 }}
                 className="absolute inset-0 bg-gradient-to-br from-blue-100 to-orange-100 rounded-3xl opacity-20"
               />
-
               {/* Floating Icons */}
               <motion.div
-                animate={{ 
+                animate={{
                   y: [0, -20, 0],
                   rotate: [0, 5, 0]
                 }}
-                transition={{ 
+                transition={{
                   duration: 4,
                   repeat: Infinity,
                   repeatType: "reverse"
@@ -134,13 +127,12 @@ export function HeroSection() {
               >
                 <Cloud className="w-8 h-8 text-blue-600" />
               </motion.div>
-
               <motion.div
-                animate={{ 
+                animate={{
                   y: [0, 15, 0],
                   rotate: [0, -3, 0]
                 }}
-                transition={{ 
+                transition={{
                   duration: 5,
                   repeat: Infinity,
                   repeatType: "reverse",
@@ -150,13 +142,12 @@ export function HeroSection() {
               >
                 <Server className="w-8 h-8 text-orange-600" />
               </motion.div>
-
               <motion.div
-                animate={{ 
+                animate={{
                   y: [0, -10, 0],
                   scale: [1, 1.1, 1]
                 }}
-                transition={{ 
+                transition={{
                   duration: 3,
                   repeat: Infinity,
                   repeatType: "reverse",
@@ -166,7 +157,6 @@ export function HeroSection() {
               >
                 <Zap className="w-8 h-8 text-yellow-500" />
               </motion.div>
-
               {/* Central Focus */}
               <div className="absolute inset-0 flex items-center justify-center">
                 <motion.div

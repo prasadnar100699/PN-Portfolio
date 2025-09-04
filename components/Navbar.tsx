@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Download, Menu, X } from 'lucide-react';
@@ -8,13 +7,11 @@ import { Button } from '@/components/ui/button';
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
   const navItems = [
     { href: '#home', label: 'Home' },
     { href: '#about', label: 'About' },
     { href: '#experience', label: 'Experience' },
     { href: '#projects', label: 'Projects' },
-    { href: '#blog', label: 'Blog' },
     { href: '#contact', label: 'Contact' },
   ];
 
@@ -58,7 +55,6 @@ export function Navbar() {
               <p className="text-xs text-gray-600">Cloud & DevOps Engineer</p>
             </div>
           </motion.div>
-
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
@@ -72,7 +68,6 @@ export function Navbar() {
               </motion.button>
             ))}
           </div>
-
           <div className="hidden md:flex items-center space-x-4">
             <Button
               onClick={() => window.open('/resume/Prasad_Narkhede_AWSCloud.pdf', '_blank')}
@@ -82,7 +77,6 @@ export function Navbar() {
               Download Resume
             </Button>
           </div>
-
           {/* Mobile Menu Button */}
           <Button
             variant="ghost"
@@ -93,7 +87,6 @@ export function Navbar() {
             {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </Button>
         </div>
-
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
           <motion.div
