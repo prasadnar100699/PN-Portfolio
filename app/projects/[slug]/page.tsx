@@ -1,5 +1,9 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import Link from 'next/link';
+import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 interface ProjectPageProps {
   params: {
@@ -145,9 +149,15 @@ resource "aws_lb" "main" {
   }
 };
 
+export async function generateStaticParams() {
+  return Object.keys(projects).map((slug) => ({
+    slug,
+  }));
+}
+
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
   const project = projects[params.slug as keyof typeof projects];
-  
+
   if (!project) {
     return {
       title: 'Project Not Found'
@@ -169,12 +179,73 @@ export default function ProjectPage({ params }: ProjectPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-white pt-24">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="prose prose-lg max-w-none">
-          <div dangerouslySetInnerHTML={{ __html: project.content.replace(/\n/g, '<br>').replace(/```hcl/g, '<pre><code class="language-hcl">').replace(/```/g, '</code></pre>') }} />
+    <div className="min-h-screen bg-gray-50">
+      {/* Header Section */}
+      <header className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-16">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Link
+            href="/projects"
+            className="inline-flex items-center text-sm font-medium text-blue-200 hover:text-white transition-colors duration-200 mb-6"
+          >
+            <svg
+              className="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+            Back to Projects
+          </Link>
+          <h1 className="text-4xl sm:text-5xl font-bold leading-tight">{project.title}</h1>
+          <p className="mt-4 text-lg sm:text-xl text-blue-100">{project.description}</p>
+          <div className="mt-6 flex flex-wrap gap-2">
+            {project.tags.map((tag) => (
+              <span
+                key={tag}
+                className="inline-block bg-blue-500 text-white text-sm px-3 py-1 rounded-full"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
         </div>
-      </div>
+      </header>
+
+      {/* Content Section */}
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <article className="prose prose-lg prose-indigo max-w-none bg-white p-8 rounded-lg shadow-lg">
+          <ReactMarkdown
+            components={{
+              code({ node, inline, className, children, ...props }) {
+                const match = /language-(\w+)/.exec(className || '');
+                return !inline && match ? (
+                  <SyntaxHighlighter
+                    style={vscDarkPlus}
+                    language={match[1]}
+                    PreTag="div"
+                    {...props}
+                  >
+                    {String(children).replace(/\n$/, '')}
+                  </SyntaxHighlighter>
+                ) : (
+                  <code className={className} {...props}>
+                    {children}
+                  </code>
+                );
+              },
+            }}
+          >
+            {project.content}
+          </ReactMarkdown>
+        </article>
+      </main>
     </div>
   );
 }
