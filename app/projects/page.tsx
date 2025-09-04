@@ -6,6 +6,13 @@ export const metadata: Metadata = {
   keywords: 'AWS Projects, DevOps Portfolio, Cloud Infrastructure, Terraform Projects, CI/CD Pipelines',
 };
 
+const projects = {
+  'aws-multi-app-architecture': {
+    title: 'AWS Multi-App Architecture with Auto Scaling & High Availability',
+    description: 'Comprehensive cloud infrastructure design for hosting multiple client applications with enterprise-grade reliability, security, and performance.',
+  },
+};
+
 export default function ProjectsPage() {
   return (
     <div className="min-h-screen bg-white pt-24">
@@ -14,12 +21,13 @@ export default function ProjectsPage() {
         <p className="text-lg text-gray-600 mb-8">
           Real-world cloud infrastructure and DevOps automation projects with detailed case studies.
         </p>
-        
         <div className="grid gap-8">
-          <div className="p-6 bg-gray-50 rounded-lg">
-            <h2 className="text-2xl font-bold mb-4">Featured Projects</h2>
-            <p className="text-gray-600">Detailed project case studies are being added. Navigate from the main page to view available projects!</p>
-          </div>
+          {Object.entries(projects).map(([slug, project]) => (
+            <div key={slug} className="p-6 bg-gray-50 rounded-lg">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">{project.title}</h2>
+              <p className="text-gray-600">{project.description}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
