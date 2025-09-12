@@ -62,7 +62,7 @@ export default function ProjectsPage() {
             return (
               <Link
                 key={index}
-                href={`/projects/${project.slug}`}
+                href={`/projects/${project.slug}/`}
                 className="p-6 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
               >
                 <div className="flex items-center mb-4">
