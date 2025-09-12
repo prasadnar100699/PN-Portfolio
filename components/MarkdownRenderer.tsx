@@ -1,5 +1,4 @@
 'use client';
-
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -17,11 +16,9 @@ export default function MarkdownRenderer({ content }: { content: string }) {
         code({ node, inline, className, children, ...props }: any) {
           const match = /language-(\w+)/.exec(className || '');
           const language = match ? match[1] : '';
-
           if (language === 'mermaid') {
             return <MermaidChart chart={String(children).trim()} />;
           }
-
           return !inline && match ? (
             <SyntaxHighlighter
               {...props}

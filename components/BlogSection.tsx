@@ -141,15 +141,6 @@ export function BlogSection() {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="text-center mt-12"
         >
-          <Button
-            variant="outline"
-            size="lg"
-            onClick={() => window.open('/blog', '_blank')}
-            className="border-blue-600 text-blue-600 hover:bg-blue-50"
-          >
-            View All Articles
-            <ArrowRight className="w-5 h-5 ml-2" />
-          </Button>
         </motion.div>
       </div>
     </section>

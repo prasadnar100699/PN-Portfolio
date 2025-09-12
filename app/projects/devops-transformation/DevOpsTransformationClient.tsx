@@ -37,7 +37,7 @@ const sections = [
   { id: 'services', title: 'Tools', icon: <Layers className="w-4 h-4" /> },
 ];
 
-export default function AWSInfrastructureClient() {
+export default function DevOpsTransformationClient() {
   const [activeSection, setActiveSection] = useState('overview');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
@@ -65,28 +65,18 @@ export default function AWSInfrastructureClient() {
 
   const mermaidCode = `
 graph TD
-A[Client Browser] -->|HTTPS| B[Route 53<br>DNS]
-B --> C[ALB<br>HTTPS, Path Routing]
-subgraph VPC
-    subgraph Public
-        C -->|TLS| D[WAF]
-        E[Bastion Host via SSM]
-    end
-    subgraph Private
-        F[ASG Web Apps<br>EFS:/apps/web] --> H[RDS MySQL<br>Multi-AZ]
-        G[Fixed EC2<br>Docker Apps<br>EFS:/apps/docker] --> H
-        F --> I[EFS]
-        G --> I
-        F --> J[S3]
-        G --> J
-        F --> K[ElastiCache Redis]
-        G --> K
-    end
-end
-H -.-> L[AWS Backup]
-I -.-> L
-G -.-> L
-K -.-> M[CloudWatch & Alarms]
+    A[Developers] -->|Code Push| B[GitLab CE on EC2 ASG]
+    B -->|CI/CD Pipeline| C[GitLab Runner + Jenkins]
+    C -->|Docker Deployments| D[Staging/Prod Apps]
+    A -->|Collaboration| E[Mattermost EE on EC2 ASG]
+    E -->|File Uploads| F[S3 Bucket<br>Restricted to Office IPs]
+    B -->|DB Access| G[Database EC2<br>Postgres/MySQL]
+    E -->|DB Access| G
+    H[Route 53 + ACM TLS] --> B
+    H --> E
+    I[CloudWatch Monitoring] --> B
+    I --> E
+    I --> G
   `;
 
   return (
@@ -94,8 +84,8 @@ K -.-> M[CloudWatch & Alarms]
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Multi-Tier AWS Infrastructure</h1>
-          <p className="text-lg mb-6">Scalable, Reliable & Secure Cloud Infrastructure with AWS</p>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Company-Wide DevOps Transformation</h1>
+          <p className="text-lg mb-6">From manual deployments to automated CI/CD excellence</p>
           <a
             href="https://github.com/your-repo" // Replace with your GitHub repo
             className="inline-flex items-center px-6 py-3 bg-white text-blue-900 rounded-2xl font-medium hover:bg-gray-100 transition"
@@ -164,14 +154,15 @@ K -.-> M[CloudWatch & Alarms]
           <section id="overview" className="mb-12">
             <h2 className="text-2xl font-semibold text-blue-900 mb-4">Overview</h2>
             <p className="text-gray-700">
-              This project showcases the design and implementation of a scalable, reliable, and secure AWS cloud
-              infrastructure to host multiple client applications (PHP, Node.js, Python). The architecture supports high
-              availability, cost efficiency, and automation-first DevOps practices, replacing a costly third-party cloud
-              vendor setup with a fully managed AWS environment.
+              This project represents a company-wide DevOps transformation at Tej IT Solutions, where I introduced
+              GitLab Community Edition (CE) for version control and CI/CD pipelines, and Mattermost Enterprise Edition
+              (EE) for team collaboration. The goal was to replace manual deployments and fragmented communication with
+              a modern, automated, and secure DevOps ecosystem.
             </p>
             <p className="text-gray-700 mt-2">
-              As the first Cloud & DevOps Engineer at Tej IT Solutions, I led end-to-end architecture design,
-              automation, and deployment strategy, ensuring production readiness for critical business applications.
+              Both platforms were self-hosted on AWS EC2 instances with Auto Scaling Groups for resilience, integrated
+              with a dedicated database EC2 instance and Amazon S3 for secure file storage. This transformation enabled
+              automation, collaboration, and security across the organization.
             </p>
           </section>
 
@@ -180,13 +171,13 @@ K -.-> M[CloudWatch & Alarms]
             <h2 className="text-2xl font-semibold text-blue-900 mb-4">Business & Technical Objectives</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[
-                { title: 'Scalability', desc: 'Handle unpredictable traffic by auto-scaling web apps horizontally.', icon: <Rocket className="w-5 h-5 text-blue-600" /> },
-                { title: 'Reliability', desc: 'Zero-downtime deployments with Multi-AZ failover.', icon: <CheckCircle className="w-5 h-5 text-blue-600" /> },
-                { title: 'Performance', desc: 'Sub-200ms ALB response, <1ms Redis sessions.', icon: <Zap className="w-5 h-5 text-blue-600" /> },
-                { title: 'Security & Compliance', desc: 'IAM least privilege, encryption, WAF protection.', icon: <Lock className="w-5 h-5 text-blue-600" /> },
-                { title: 'Disaster Recovery', desc: 'RPO = 15 min, RTO = 30 min.', icon: <Shield className="w-5 h-5 text-blue-600" /> },
-                { title: 'Cost Optimization', desc: '~40% savings via ASG scaling & right-sizing.', icon: <Database className="w-5 h-5 text-blue-600" /> },
-                { title: 'Operational Simplicity', desc: 'Unified monitoring, automated backups, patching.', icon: <Monitor className="w-5 h-5 text-blue-600" /> },
+                { title: 'Centralized Collaboration', desc: 'Introduce Mattermost EE for team chat and DevOps discussions.', icon: <MessageCircle className="w-5 h-5 text-blue-600" /> },
+                { title: 'Version Control & CI/CD', desc: 'Deploy GitLab CE for code hosting and automated pipelines.', icon: <GitBranch className="w-5 h-5 text-blue-600" /> },
+                { title: 'Automation First', desc: 'Replace manual deployments with CI/CD via GitLab Runners & Jenkins.', icon: <Zap className="w-5 h-5 text-blue-600" /> },
+                { title: 'Resilience & Reliability', desc: 'Host GitLab & Mattermost on EC2 ASG.', icon: <CheckCircle className="w-5 h-5 text-blue-600" /> },
+                { title: 'Data Security', desc: 'Store static uploads in S3, restricted to office IPs.', icon: <Lock className="w-5 h-5 text-blue-600" /> },
+                { title: 'Scalability', desc: 'Ensure platform grows with teams and projects.', icon: <Rocket className="w-5 h-5 text-blue-600" /> },
+                { title: 'Cost Efficiency', desc: '~40% savings with EC2 ASG and right-sizing.', icon: <Database className="w-5 h-5 text-blue-600" /> },
               ].map((obj, index) => (
                 <motion.div
                   key={index}
@@ -222,16 +213,12 @@ K -.-> M[CloudWatch & Alarms]
               </TableHeader>
               <TableBody>
                 {[
-                  { attr: 'Availability', req: '99.9% SLA with RDS Multi-AZ, ALB checks, ASG redundancy', icon: <CheckCircle className="w-4 h-4 text-blue-600" /> },
-                  { attr: 'Reliability', req: 'Zero-downtime deployments, EBS snapshots for recovery', icon: <Shield className="w-4 h-4 text-blue-600" /> },
-                  { attr: 'Performance', req: 'ALB < 200ms, Redis < 5ms, scale 2× peak load', icon: <Zap className="w-4 h-4 text-blue-600" /> },
-                  { attr: 'Scalability', req: 'ASG 1–5 instances @ CPU ≥ 70%', icon: <Rocket className="w-4 h-4 text-blue-600" /> },
-                  { attr: 'Disaster Recovery', req: 'RPO = 15 min, RTO = 30 min', icon: <Server className="w-4 h-4 text-blue-600" /> },
-                  { attr: 'Security', req: 'IAM least privilege, SGs, ACM TLS, WAF OWASP rules', icon: <Lock className="w-4 h-4 text-blue-600" /> },
-                  { attr: 'Compliance', req: 'Data encrypted (S3, RDS, EFS, TLS in transit)', icon: <Shield className="w-4 h-4 text-blue-600" /> },
-                  { attr: 'Monitoring', req: 'CloudWatch dashboards, alarms, SNS', icon: <Monitor className="w-4 h-4 text-blue-600" /> },
-                  { attr: 'Cost Efficiency', req: '~40% savings, db.t3.small, cache.t3.micro', icon: <Database className="w-4 h-4 text-blue-600" /> },
-                  { attr: 'Simplicity', req: 'Automated backups, SSM Patch Manager', icon: <Cpu className="w-4 h-4 text-blue-600" /> },
+                  { attr: 'Availability', req: '99.9% uptime with ASG redundancy', icon: <CheckCircle className="w-4 h-4 text-blue-600" /> },
+                  { attr: 'Security', req: 'S3 restricted to office IPs, TLS everywhere, IAM least privilege', icon: <Lock className="w-4 h-4 text-blue-600" /> },
+                  { attr: 'Reliability', req: 'ASG replaces failed GitLab/Mattermost EC2 automatically', icon: <Shield className="w-4 h-4 text-blue-600" /> },
+                  { attr: 'Performance', req: 'GitLab CI/CD pipelines complete < 5 mins average', icon: <Zap className="w-4 h-4 text-blue-600" /> },
+                  { attr: 'Scalability', req: 'Add nodes to ASG for GitLab runners/Mattermost users', icon: <Rocket className="w-4 h-4 text-blue-600" /> },
+                  { attr: 'Compliance', req: 'Data encrypted (RDS volumes, S3 SSE, HTTPS in transit)', icon: <Shield className="w-4 h-4 text-blue-600" /> },
                 ].map((row, index) => (
                   <TableRow key={index}>
                     <TableCell className="flex items-center">
@@ -247,33 +234,23 @@ K -.-> M[CloudWatch & Alarms]
 
           {/* Architecture */}
           <section id="architecture" className="mb-12">
-            <h2 className="text-2xl font-semibold text-blue-900 mb-4">To-Be Architecture</h2>
+            <h2 className="text-2xl font-semibold text-blue-900 mb-4">Architecture</h2>
             <div className="space-y-4 mb-6">
               {[
                 {
-                  title: 'Compute',
-                  content: 'ASG (EC2 + Nginx + EFS) for stateless web tier, scales 1–5. Fixed EC2 for Dockerized PHP, Node.js, Python apps.',
+                  title: 'Infrastructure Setup',
+                  content: 'VPC with public/private subnets, NAT Gateway, Security Groups. EC2 ASG hosts GitLab CE and Mattermost EE with Docker for simplified deployments.',
                   icon: <Cpu className="w-5 h-5 text-blue-600" />,
                 },
                 {
-                  title: 'Storage',
-                  content: 'EFS for app code/configs, shared across ASG. S3 for media uploads, logs, backups with lifecycle policies.',
-                  icon: <Database className="w-5 h-5 text-blue-600" />,
+                  title: 'Application Layer',
+                  content: 'GitLab CE for repository management, CI/CD pipelines, and Docker-based runners. Mattermost EE for centralized collaboration, integrated with GitLab for notifications.',
+                  icon: <Layers className="w-5 h-5 text-blue-600" />,
                 },
                 {
-                  title: 'Security',
-                  content: 'IAM roles with least privilege, Security Groups, ACM TLS certificates, AWS WAF with OWASP rules.',
-                  icon: <Lock className="w-5 h-5 text-blue-600" />,
-                },
-                {
-                  title: 'Networking',
-                  content: 'VPC with public/private subnets across 2 AZs, ALB with path-based routing (/web, /api), Route 53 DNS.',
-                  icon: <Network className="w-5 h-5 text-blue-600" />,
-                },
-                {
-                  title: 'Monitoring & DR',
-                  content: 'CloudWatch dashboards, SNS alerts, AWS Backup for RDS, EFS, EC2. RPO = 15 min, RTO = 30 min.',
-                  icon: <Monitor className="w-5 h-5 text-blue-600" />,
+                  title: 'CI/CD Automation',
+                  content: 'GitLab Pipelines for Build, Test, Deploy workflows. Jenkins for legacy projects. Dockerized apps pushed to GitLab Container Registry for auto-deployments.',
+                  icon: <GitBranch className="w-5 h-5 text-blue-600" />,
                 },
               ].map((card, index) => (
                 <motion.div
@@ -330,34 +307,34 @@ K -.-> M[CloudWatch & Alarms]
               <TableBody>
                 {[
                   {
-                    decision: 'Use RDS MySQL',
-                    alternatives: 'Aurora, Self-managed MySQL',
-                    justification: 'RDS provides managed service, Multi-AZ HA, cheaper than Aurora for <200 users',
+                    decision: 'EC2 ASG for GitLab & Mattermost',
+                    alternatives: 'ECS, EKS, Third-party SaaS',
+                    justification: 'Cost-effective, supports Docker, easier to manage than EKS for small team',
                   },
                   {
-                    decision: 'Use ElastiCache Redis for sessions',
-                    alternatives: 'Store in DB, Store in S3',
-                    justification: 'Redis provides sub-ms latency vs 10–30ms for S3 and avoids DB contention',
+                    decision: 'Dedicated EC2 for Database',
+                    alternatives: 'RDS, Aurora',
+                    justification: 'Lower cost for small-scale DB, full control over Postgres/MySQL config',
                   },
                   {
-                    decision: 'Use EFS for code/configs',
-                    alternatives: 'S3, EBS',
-                    justification: 'Needed for multi-instance consistency; S3 not suitable for shared file system',
+                    decision: 'S3 for Mattermost Uploads',
+                    alternatives: 'EFS, Local storage',
+                    justification: 'Scalable, secure with IP restrictions, cost-efficient for static files',
                   },
                   {
-                    decision: 'Fixed EC2 with termination protection',
-                    alternatives: 'ASG min=1, Lambda',
-                    justification: 'Ensures stable environment for Docker apps requiring consistent runtime',
+                    decision: 'GitLab CE for CI/CD',
+                    alternatives: 'GitHub Actions, Jenkins-only',
+                    justification: 'Integrated with version control, free, supports Docker runners',
                   },
                   {
-                    decision: 'Route 53 for DNS',
-                    alternatives: 'GoDaddy',
-                    justification: 'Seamless ACM certificate validation & AWS-native DNS integration',
+                    decision: 'Mattermost EE for Collaboration',
+                    alternatives: 'Slack, MS Teams',
+                    justification: 'Self-hosted, GitLab integration, cost-effective for enterprise features',
                   },
                   {
-                    decision: 'ALB with path-based routing',
-                    alternatives: 'NLB, Separate ALBs',
-                    justification: 'ALB supports SSL termination, WAF integration, and app-level routing',
+                    decision: 'WAF with Office IP Restrictions',
+                    alternatives: 'No WAF, VPN-only access',
+                    justification: 'Prevents external leaks, simpler than VPN for office-based access',
                   },
                 ].map((row, index) => (
                   <TableRow key={index} className={index % 2 === 0 ? 'bg-blue-50' : ''}>
@@ -376,16 +353,16 @@ K -.-> M[CloudWatch & Alarms]
             <div className="relative pl-6">
               <div className="absolute left-2 top-0 h-full w-0.5 bg-blue-200"></div>
               {[
-                'VPC + networking',
-                'IAM + SGs + ACM',
-                'EC2 (ASG + Docker host)',
-                'RDS + Redis',
-                'EFS + S3',
-                'ALB + WAF',
-                'Monitoring + SNS',
-                'Backups + DR drills',
-                'CI/CD pipelines',
-                'Testing & handover',
+                'Set up VPC, subnets, NAT Gateway',
+                'Configure IAM roles, Security Groups, ACM',
+                'Deploy EC2 ASG for GitLab CE & Mattermost EE',
+                'Set up dedicated EC2 for Postgres/MySQL',
+                'Configure S3 with IP-restricted bucket policy',
+                'Set up Route 53 DNS for gitlab.company.com, chat.company.com',
+                'Implement GitLab CI/CD pipelines & Jenkins integration',
+                'Configure Mattermost with GitLab notifications',
+                'Set up CloudWatch monitoring & alarms',
+                'Test and roll out to teams',
               ].map((step, index) => (
                 <motion.div
                   key={index}
@@ -406,11 +383,11 @@ K -.-> M[CloudWatch & Alarms]
             <h2 className="text-2xl font-semibold text-blue-900 mb-4">Key Outcomes</h2>
             <ul className="space-y-2">
               {[
-                '99.9% uptime with redundancy.',
-                'Redis reduced session latency from 30ms → <1ms.',
-                '40% cost savings with ASG scaling.',
-                'Strong security with IAM + WAF.',
-                'Automated DR, SSL renewals, patching.',
+                'Introduced DevOps culture with Git-based version control and CI/CD.',
+                'Centralized collaboration via Mattermost, replacing emails/WhatsApp.',
+                '80% of projects moved to automated pipelines.',
+                'Enhanced security with S3 IP restrictions, preventing data leaks.',
+                'Achieved zero downtime with EC2 ASG and database tier.',
               ].map((outcome, index) => (
                 <motion.li
                   key={index}
@@ -431,22 +408,18 @@ K -.-> M[CloudWatch & Alarms]
             <h2 className="text-2xl font-semibold text-blue-900 mb-4">AWS Services & DevOps Tools Used</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
-                { title: 'EC2 (ASG + Fixed Docker)', icon: <Server className="w-4 h-4 text-blue-600" /> },
-                { title: 'RDS MySQL (Multi-AZ)', icon: <Database className="w-4 h-4 text-blue-600" /> },
-                { title: 'ElastiCache Redis', icon: <Zap className="w-4 h-4 text-blue-600" /> },
-                { title: 'EFS', icon: <Layers className="w-4 h-4 text-blue-600" /> },
-                { title: 'S3', icon: <Database className="w-4 h-4 text-blue-600" /> },
-                { title: 'ALB + WAF', icon: <Shield className="w-4 h-4 text-blue-600" /> },
-                { title: 'Route 53', icon: <Cloud className="w-4 h-4 text-blue-600" /> },
-                { title: 'IAM + ACM', icon: <Lock className="w-4 h-4 text-blue-600" /> },
-                { title: 'CloudWatch', icon: <Monitor className="w-4 h-4 text-blue-600" /> },
-                { title: 'AWS Backup', icon: <Server className="w-4 h-4 text-blue-600" /> },
-                { title: 'SSM', icon: <Cpu className="w-4 h-4 text-blue-600" /> },
-                { title: 'Terraform (IaC)', icon: <GitBranch className="w-4 h-4 text-blue-600" /> },
-                { title: 'Docker (Containers)', icon: <Layers className="w-4 h-4 text-blue-600" /> },
-                { title: 'GitHub Actions (CI/CD)', icon: <GitBranch className="w-4 h-4 text-blue-600" /> },
-                { title: 'GitLab CI/CD', icon: <GitBranch className="w-4 h-4 text-blue-600" /> },
-                { title: 'CloudWatch Alarms/Dashboards', icon: <Monitor className="w-4 h-4 text-blue-600" /> },
+                { title: 'EC2 (App + DB Tier, ASG)', icon: <Server className="w-4 h-4 text-blue-600" /> },
+                { title: 'S3 (File Uploads)', icon: <Database className="w-4 h-4 text-blue-600" /> },
+                { title: 'Route 53 (DNS)', icon: <Cloud className="w-4 h-4 text-blue-600" /> },
+                { title: 'ACM (TLS Certificates)', icon: <Lock className="w-4 h-4 text-blue-600" /> },
+                { title: 'CloudWatch (Monitoring)', icon: <Monitor className="w-4 h-4 text-blue-600" /> },
+                { title: 'IAM (Access Control)', icon: <Lock className="w-4 h-4 text-blue-600" /> },
+                { title: 'VPC (Networking)', icon: <Network className="w-4 h-4 text-blue-600" /> },
+                { title: 'GitLab CE (CI/CD)', icon: <GitBranch className="w-4 h-4 text-blue-600" /> },
+                { title: 'GitLab Runners (Docker)', icon: <GitBranch className="w-4 h-4 text-blue-600" /> },
+                { title: 'Mattermost EE', icon: <MessageCircle className="w-4 h-4 text-blue-600" /> },
+                { title: 'Jenkins (Legacy CI/CD)', icon: <GitBranch className="w-4 h-4 text-blue-600" /> },
+                { title: 'Docker (Containerization)', icon: <Layers className="w-4 h-4 text-blue-600" /> },
               ].map((service, index) => (
                 <motion.div
                   key={index}

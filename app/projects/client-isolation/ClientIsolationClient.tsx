@@ -8,21 +8,18 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Cloud,
-  Database,
   Lock,
-  Server,
-  Zap,
-  GitBranch,
   Monitor,
-  Shield,
+  GitBranch,
   Menu,
   X,
   Send,
   Rocket,
   CheckCircle,
-  Layers,
-  Network,
-  Cpu,
+  Users,
+  DollarSign,
+  Shield,
+  Database,
   MessageCircle,
 } from 'lucide-react';
 import { Dialog, DialogContent, DialogTrigger } from '@radix-ui/react-dialog';
@@ -31,13 +28,13 @@ import MermaidChart from '@/components/MarkdownRenderer';
 
 const sections = [
   { id: 'overview', title: 'Overview', icon: <Cloud className="w-4 h-4" /> },
-  { id: 'objectives', title: 'Objectives', icon: <Zap className="w-4 h-4" /> },
-  { id: 'architecture', title: 'Architecture', icon: <Server className="w-4 h-4" /> },
+  { id: 'objectives', title: 'Objectives', icon: <Rocket className="w-4 h-4" /> },
+  { id: 'architecture', title: 'Architecture', icon: <GitBranch className="w-4 h-4" /> },
   { id: 'outcomes', title: 'Outcomes', icon: <CheckCircle className="w-4 h-4" /> },
-  { id: 'services', title: 'Tools', icon: <Layers className="w-4 h-4" /> },
+  { id: 'services', title: 'Tools', icon: <Database className="w-4 h-4" /> },
 ];
 
-export default function AWSInfrastructureClient() {
+export default function ClientIsolationClient() {
   const [activeSection, setActiveSection] = useState('overview');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
@@ -65,28 +62,29 @@ export default function AWSInfrastructureClient() {
 
   const mermaidCode = `
 graph TD
-A[Client Browser] -->|HTTPS| B[Route 53<br>DNS]
-B --> C[ALB<br>HTTPS, Path Routing]
-subgraph VPC
-    subgraph Public
-        C -->|TLS| D[WAF]
-        E[Bastion Host via SSM]
+    A[Management Account<br>Consolidated Billing & Governance] --> B[AWS Organizations]
+    B --> C[Client-A OU]
+    B --> D[Client-B OU]
+    B --> E[Client-C OU]
+    C --> F[Client-A AWS Account]
+    D --> G[Client-B AWS Account]
+    E --> H[Client-C AWS Account]
+    subgraph Security
+        I[IAM Identity Center<br>SSO]
+        J[Service Control Policies<br>SCPs]
+        K[CloudTrail + Config<br>Centralized Logging]
     end
-    subgraph Private
-        F[ASG Web Apps<br>EFS:/apps/web] --> H[RDS MySQL<br>Multi-AZ]
-        G[Fixed EC2<br>Docker Apps<br>EFS:/apps/docker] --> H
-        F --> I[EFS]
-        G --> I
-        F --> J[S3]
-        G --> J
-        F --> K[ElastiCache Redis]
-        G --> K
+    subgraph Billing
+        L[Cost Explorer]
+        M[Budgets & Alerts]
+        N[Per-Client Reporting]
     end
-end
-H -.-> L[AWS Backup]
-I -.-> L
-G -.-> L
-K -.-> M[CloudWatch & Alarms]
+    A --> I
+    A --> J
+    A --> K
+    A --> L
+    A --> M
+    A --> N
   `;
 
   return (
@@ -94,8 +92,8 @@ K -.-> M[CloudWatch & Alarms]
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Multi-Tier AWS Infrastructure</h1>
-          <p className="text-lg mb-6">Scalable, Reliable & Secure Cloud Infrastructure with AWS</p>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Multi-Client Account Isolation</h1>
+          <p className="text-lg mb-6">Secure, scalable multi-tenant AWS architecture with Organizations</p>
           <a
             href="https://github.com/your-repo" // Replace with your GitHub repo
             className="inline-flex items-center px-6 py-3 bg-white text-blue-900 rounded-2xl font-medium hover:bg-gray-100 transition"
@@ -164,14 +162,10 @@ K -.-> M[CloudWatch & Alarms]
           <section id="overview" className="mb-12">
             <h2 className="text-2xl font-semibold text-blue-900 mb-4">Overview</h2>
             <p className="text-gray-700">
-              This project showcases the design and implementation of a scalable, reliable, and secure AWS cloud
-              infrastructure to host multiple client applications (PHP, Node.js, Python). The architecture supports high
-              availability, cost efficiency, and automation-first DevOps practices, replacing a costly third-party cloud
-              vendor setup with a fully managed AWS environment.
-            </p>
-            <p className="text-gray-700 mt-2">
-              As the first Cloud & DevOps Engineer at Tej IT Solutions, I led end-to-end architecture design,
-              automation, and deployment strategy, ensuring production readiness for critical business applications.
+              As a Cloud & DevOps Engineer at Tej IT Solutions, I designed a multi-tenant AWS architecture using AWS
+              Organizations to provide account-level isolation for each client, enforce security policies, and enable
+              separate billing. This addressed the challenge of managing multiple client environments under a single
+              umbrella, ensuring data isolation, strong security boundaries, and clear cost allocation.
             </p>
           </section>
 
@@ -180,13 +174,11 @@ K -.-> M[CloudWatch & Alarms]
             <h2 className="text-2xl font-semibold text-blue-900 mb-4">Business & Technical Objectives</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[
-                { title: 'Scalability', desc: 'Handle unpredictable traffic by auto-scaling web apps horizontally.', icon: <Rocket className="w-5 h-5 text-blue-600" /> },
-                { title: 'Reliability', desc: 'Zero-downtime deployments with Multi-AZ failover.', icon: <CheckCircle className="w-5 h-5 text-blue-600" /> },
-                { title: 'Performance', desc: 'Sub-200ms ALB response, <1ms Redis sessions.', icon: <Zap className="w-5 h-5 text-blue-600" /> },
-                { title: 'Security & Compliance', desc: 'IAM least privilege, encryption, WAF protection.', icon: <Lock className="w-5 h-5 text-blue-600" /> },
-                { title: 'Disaster Recovery', desc: 'RPO = 15 min, RTO = 30 min.', icon: <Shield className="w-5 h-5 text-blue-600" /> },
-                { title: 'Cost Optimization', desc: '~40% savings via ASG scaling & right-sizing.', icon: <Database className="w-5 h-5 text-blue-600" /> },
-                { title: 'Operational Simplicity', desc: 'Unified monitoring, automated backups, patching.', icon: <Monitor className="w-5 h-5 text-blue-600" /> },
+                { title: 'Account Isolation', desc: 'Separate AWS accounts per client for strict security boundaries.', icon: <Users className="w-5 h-5 text-blue-600" /> },
+                { title: 'Security Policies', desc: 'Enforce SCPs to restrict risky services across accounts.', icon: <Lock className="w-5 h-5 text-blue-600" /> },
+                { title: 'Billing Transparency', desc: 'Consolidated billing with per-client cost tracking.', icon: <DollarSign className="w-5 h-5 text-blue-600" /> },
+                { title: 'IAM Governance', desc: 'AWS SSO for centralized, role-based access control.', icon: <Shield className="w-5 h-5 text-blue-600" /> },
+                { title: 'Scalability', desc: 'Automated provisioning of new client accounts via Control Tower.', icon: <Rocket className="w-5 h-5 text-blue-600" /> },
               ].map((obj, index) => (
                 <motion.div
                   key={index}
@@ -222,16 +214,10 @@ K -.-> M[CloudWatch & Alarms]
               </TableHeader>
               <TableBody>
                 {[
-                  { attr: 'Availability', req: '99.9% SLA with RDS Multi-AZ, ALB checks, ASG redundancy', icon: <CheckCircle className="w-4 h-4 text-blue-600" /> },
-                  { attr: 'Reliability', req: 'Zero-downtime deployments, EBS snapshots for recovery', icon: <Shield className="w-4 h-4 text-blue-600" /> },
-                  { attr: 'Performance', req: 'ALB < 200ms, Redis < 5ms, scale 2× peak load', icon: <Zap className="w-4 h-4 text-blue-600" /> },
-                  { attr: 'Scalability', req: 'ASG 1–5 instances @ CPU ≥ 70%', icon: <Rocket className="w-4 h-4 text-blue-600" /> },
-                  { attr: 'Disaster Recovery', req: 'RPO = 15 min, RTO = 30 min', icon: <Server className="w-4 h-4 text-blue-600" /> },
-                  { attr: 'Security', req: 'IAM least privilege, SGs, ACM TLS, WAF OWASP rules', icon: <Lock className="w-4 h-4 text-blue-600" /> },
-                  { attr: 'Compliance', req: 'Data encrypted (S3, RDS, EFS, TLS in transit)', icon: <Shield className="w-4 h-4 text-blue-600" /> },
-                  { attr: 'Monitoring', req: 'CloudWatch dashboards, alarms, SNS', icon: <Monitor className="w-4 h-4 text-blue-600" /> },
-                  { attr: 'Cost Efficiency', req: '~40% savings, db.t3.small, cache.t3.micro', icon: <Database className="w-4 h-4 text-blue-600" /> },
-                  { attr: 'Simplicity', req: 'Automated backups, SSM Patch Manager', icon: <Cpu className="w-4 h-4 text-blue-600" /> },
+                  { attr: 'Security', req: 'SCPs prevent risky operations across accounts', icon: <Lock className="w-4 h-4 text-blue-600" /> },
+                  { attr: 'Isolation', req: 'Separate accounts per client; no cross-data access', icon: <Shield className="w-4 h-4 text-blue-600" /> },
+                  { attr: 'Billing', req: 'Per-client cost reporting via consolidated billing', icon: <DollarSign className="w-4 h-4 text-blue-600" /> },
+                  { attr: 'Compliance', req: 'Centralized logging with CloudTrail and Config', icon: <Monitor className="w-4 h-4 text-blue-600" /> },
                 ].map((row, index) => (
                   <TableRow key={index}>
                     <TableCell className="flex items-center">
@@ -247,33 +233,23 @@ K -.-> M[CloudWatch & Alarms]
 
           {/* Architecture */}
           <section id="architecture" className="mb-12">
-            <h2 className="text-2xl font-semibold text-blue-900 mb-4">To-Be Architecture</h2>
+            <h2 className="text-2xl font-semibold text-blue-900 mb-4">Architecture</h2>
             <div className="space-y-4 mb-6">
               {[
                 {
-                  title: 'Compute',
-                  content: 'ASG (EC2 + Nginx + EFS) for stateless web tier, scales 1–5. Fixed EC2 for Dockerized PHP, Node.js, Python apps.',
-                  icon: <Cpu className="w-5 h-5 text-blue-600" />,
+                  title: 'AWS Organizations Setup',
+                  content: 'Management account for consolidated billing and governance. Organizational Units (OUs) for Client-A, Client-B, Client-C, each with a separate AWS account.',
+                  icon: <Cloud className="w-5 h-5 text-blue-600" />,
                 },
                 {
-                  title: 'Storage',
-                  content: 'EFS for app code/configs, shared across ASG. S3 for media uploads, logs, backups with lifecycle policies.',
-                  icon: <Database className="w-5 h-5 text-blue-600" />,
-                },
-                {
-                  title: 'Security',
-                  content: 'IAM roles with least privilege, Security Groups, ACM TLS certificates, AWS WAF with OWASP rules.',
+                  title: 'IAM & Security',
+                  content: 'AWS IAM Identity Center (SSO) for single login. SCPs to deny disabling CloudTrail, GuardDuty, and unapproved instance types.',
                   icon: <Lock className="w-5 h-5 text-blue-600" />,
                 },
                 {
-                  title: 'Networking',
-                  content: 'VPC with public/private subnets across 2 AZs, ALB with path-based routing (/web, /api), Route 53 DNS.',
-                  icon: <Network className="w-5 h-5 text-blue-600" />,
-                },
-                {
-                  title: 'Monitoring & DR',
-                  content: 'CloudWatch dashboards, SNS alerts, AWS Backup for RDS, EFS, EC2. RPO = 15 min, RTO = 30 min.',
-                  icon: <Monitor className="w-5 h-5 text-blue-600" />,
+                  title: 'Billing & Monitoring',
+                  content: 'Consolidated billing with Cost Explorer and Budgets for per-client tracking. Centralized CloudTrail and Config for compliance.',
+                  icon: <DollarSign className="w-5 h-5 text-blue-600" />,
                 },
               ].map((card, index) => (
                 <motion.div
@@ -313,7 +289,7 @@ K -.-> M[CloudWatch & Alarms]
                 </motion.div>
               ))}
             </div>
-            <MermaidChart content={mermaidCode} />
+            <MermaidChart content={mermaidCode} />          
           </section>
 
           {/* Architecture Decision Records */}
@@ -330,34 +306,29 @@ K -.-> M[CloudWatch & Alarms]
               <TableBody>
                 {[
                   {
-                    decision: 'Use RDS MySQL',
-                    alternatives: 'Aurora, Self-managed MySQL',
-                    justification: 'RDS provides managed service, Multi-AZ HA, cheaper than Aurora for <200 users',
+                    decision: 'AWS Organizations for Multi-Tenancy',
+                    alternatives: 'Single AWS Account, VPC Peering',
+                    justification: 'Organizations provide native account isolation and governance.',
                   },
                   {
-                    decision: 'Use ElastiCache Redis for sessions',
-                    alternatives: 'Store in DB, Store in S3',
-                    justification: 'Redis provides sub-ms latency vs 10–30ms for S3 and avoids DB contention',
+                    decision: 'IAM Identity Center (SSO)',
+                    alternatives: 'IAM Users, Third-party SSO',
+                    justification: 'Centralized access control, AWS-native, simplifies multi-account management.',
                   },
                   {
-                    decision: 'Use EFS for code/configs',
-                    alternatives: 'S3, EBS',
-                    justification: 'Needed for multi-instance consistency; S3 not suitable for shared file system',
+                    decision: 'SCPs for Security Policies',
+                    alternatives: 'IAM Policies, Manual Governance',
+                    justification: 'SCPs enforce org-wide restrictions, reducing human error.',
                   },
                   {
-                    decision: 'Fixed EC2 with termination protection',
-                    alternatives: 'ASG min=1, Lambda',
-                    justification: 'Ensures stable environment for Docker apps requiring consistent runtime',
+                    decision: 'Consolidated Billing',
+                    alternatives: 'Separate Billing per Account',
+                    justification: 'Simplifies payment while allowing per-client cost tracking.',
                   },
                   {
-                    decision: 'Route 53 for DNS',
-                    alternatives: 'GoDaddy',
-                    justification: 'Seamless ACM certificate validation & AWS-native DNS integration',
-                  },
-                  {
-                    decision: 'ALB with path-based routing',
-                    alternatives: 'NLB, Separate ALBs',
-                    justification: 'ALB supports SSL termination, WAF integration, and app-level routing',
+                    decision: 'Control Tower for Account Provisioning',
+                    alternatives: 'Manual Account Creation, CLI Scripts',
+                    justification: 'Automates account setup with pre-configured governance.',
                   },
                 ].map((row, index) => (
                   <TableRow key={index} className={index % 2 === 0 ? 'bg-blue-50' : ''}>
@@ -376,16 +347,15 @@ K -.-> M[CloudWatch & Alarms]
             <div className="relative pl-6">
               <div className="absolute left-2 top-0 h-full w-0.5 bg-blue-200"></div>
               {[
-                'VPC + networking',
-                'IAM + SGs + ACM',
-                'EC2 (ASG + Docker host)',
-                'RDS + Redis',
-                'EFS + S3',
-                'ALB + WAF',
-                'Monitoring + SNS',
-                'Backups + DR drills',
-                'CI/CD pipelines',
-                'Testing & handover',
+                'Set up AWS Organizations and Management Account',
+                'Create OUs for Client-A, Client-B, Client-C',
+                'Provision client AWS accounts via Control Tower',
+                'Configure IAM Identity Center (SSO)',
+                'Apply SCPs to restrict CloudTrail, GuardDuty, instance types',
+                'Set up consolidated billing with Cost Explorer and Budgets',
+                'Centralize CloudTrail and Config logging',
+                'Test account isolation and compliance',
+                'Roll out to clients',
               ].map((step, index) => (
                 <motion.div
                   key={index}
@@ -406,11 +376,10 @@ K -.-> M[CloudWatch & Alarms]
             <h2 className="text-2xl font-semibold text-blue-900 mb-4">Key Outcomes</h2>
             <ul className="space-y-2">
               {[
-                '99.9% uptime with redundancy.',
-                'Redis reduced session latency from 30ms → <1ms.',
-                '40% cost savings with ASG scaling.',
-                'Strong security with IAM + WAF.',
-                'Automated DR, SSL renewals, patching.',
+                '100% account-level isolation with no shared resources.',
+                'Improved security posture with org-wide SCPs.',
+                'Billing transparency via per-client budgets and alerts.',
+                'Scalable model with Control Tower for new accounts.',
               ].map((outcome, index) => (
                 <motion.li
                   key={index}
@@ -426,27 +395,21 @@ K -.-> M[CloudWatch & Alarms]
             </ul>
           </section>
 
-          {/* AWS Services & DevOps Tools */}
+          {/* AWS Services & Tools */}
           <section id="services" className="mb-12">
-            <h2 className="text-2xl font-semibold text-blue-900 mb-4">AWS Services & DevOps Tools Used</h2>
+            <h2 className="text-2xl font-semibold text-blue-900 mb-4">AWS Services & Tools Used</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
-                { title: 'EC2 (ASG + Fixed Docker)', icon: <Server className="w-4 h-4 text-blue-600" /> },
-                { title: 'RDS MySQL (Multi-AZ)', icon: <Database className="w-4 h-4 text-blue-600" /> },
-                { title: 'ElastiCache Redis', icon: <Zap className="w-4 h-4 text-blue-600" /> },
-                { title: 'EFS', icon: <Layers className="w-4 h-4 text-blue-600" /> },
-                { title: 'S3', icon: <Database className="w-4 h-4 text-blue-600" /> },
-                { title: 'ALB + WAF', icon: <Shield className="w-4 h-4 text-blue-600" /> },
-                { title: 'Route 53', icon: <Cloud className="w-4 h-4 text-blue-600" /> },
-                { title: 'IAM + ACM', icon: <Lock className="w-4 h-4 text-blue-600" /> },
-                { title: 'CloudWatch', icon: <Monitor className="w-4 h-4 text-blue-600" /> },
-                { title: 'AWS Backup', icon: <Server className="w-4 h-4 text-blue-600" /> },
-                { title: 'SSM', icon: <Cpu className="w-4 h-4 text-blue-600" /> },
-                { title: 'Terraform (IaC)', icon: <GitBranch className="w-4 h-4 text-blue-600" /> },
-                { title: 'Docker (Containers)', icon: <Layers className="w-4 h-4 text-blue-600" /> },
-                { title: 'GitHub Actions (CI/CD)', icon: <GitBranch className="w-4 h-4 text-blue-600" /> },
-                { title: 'GitLab CI/CD', icon: <GitBranch className="w-4 h-4 text-blue-600" /> },
-                { title: 'CloudWatch Alarms/Dashboards', icon: <Monitor className="w-4 h-4 text-blue-600" /> },
+                { title: 'AWS Organizations', icon: <Cloud className="w-4 h-4 text-blue-600" /> },
+                { title: 'IAM Identity Center (SSO)', icon: <Lock className="w-4 h-4 text-blue-600" /> },
+                { title: 'Service Control Policies (SCPs)', icon: <Shield className="w-4 h-4 text-blue-600" /> },
+                { title: 'CloudTrail', icon: <Monitor className="w-4 h-4 text-blue-600" /> },
+                { title: 'AWS Config', icon: <Monitor className="w-4 h-4 text-blue-600" /> },
+                { title: 'Cost Explorer', icon: <DollarSign className="w-4 h-4 text-blue-600" /> },
+                { title: 'Budgets', icon: <DollarSign className="w-4 h-4 text-blue-600" /> },
+                { title: 'Consolidated Billing', icon: <DollarSign className="w-4 h-4 text-blue-600" /> },
+                { title: 'GuardDuty', icon: <Shield className="w-4 h-4 text-blue-600" /> },
+                { title: 'IAM Policies', icon: <Lock className="w-4 h-4 text-blue-600" /> },
               ].map((service, index) => (
                 <motion.div
                   key={index}
